@@ -42,6 +42,7 @@
                 android:layout_marginBottom="10dp"
                 android:button="@drawable/radiobtn_style"
                 android:text="@string/content_car"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -61,8 +62,8 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName2"
-                android:layout_width="wrap_content"
+                android:id="@+id/et_knh_custominfo"
+                android:layout_width="242dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="40dp"
                 android:layout_marginLeft="40dp"
@@ -87,11 +88,12 @@
         <Button
             android:id="@+id/btn_knh_Cancle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_marginTop="30dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:background="@drawable/btn_style"
+            android:onClick="onClick"
             android:text="@string/cancle_btn"
             android:textColor="@color/point"
             android:textSize="16sp"
@@ -100,7 +102,7 @@
         <Button
             android:id="@+id/btn_knh_Confirm"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_weight="1"
             android:background="@drawable/btn_style"
             android:paddingLeft="10dp"
@@ -109,6 +111,7 @@
             android:text="@string/ok_BTN"
             android:textColor="@color/white"
             android:textSize="16sp"
+            android:onClick="onClick"
             android:textStyle="bold"
             app:backgroundTint="@color/point" />
 

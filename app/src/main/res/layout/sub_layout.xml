@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:onClick="onClick"
     android:orientation="vertical">
 
     <LinearLayout
@@ -26,13 +27,13 @@
             android:layout_weight="1"
             android:gravity="center"
             android:paddingTop="20dp"
+            android:paddingEnd="20dp"
             android:paddingRight="20dp"
             android:paddingBottom="20dp"
             android:text="@string/title_sub"
             android:textColor="@color/point"
             android:textSize="18sp"
-            android:textStyle="bold"
-            android:paddingEnd="20dp" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -56,12 +57,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:onClick="onClick"
             app:srcCompat="@drawable/fire" />
 
         <ImageView
             android:id="@+id/img_knh_const"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="onClick"
             app:srcCompat="@drawable/construction" />
 
         <Button
