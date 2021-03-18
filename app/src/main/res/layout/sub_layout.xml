@@ -44,7 +44,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/img_knh_car"
+            android:id="@+id/img_knh_accbtn1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -53,7 +53,7 @@
             app:srcCompat="@drawable/car_accident" />
 
         <ImageView
-            android:id="@+id/img_knh_fire"
+            android:id="@+id/img_knh_accbtn2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -61,14 +61,14 @@
             app:srcCompat="@drawable/fire" />
 
         <ImageView
-            android:id="@+id/img_knh_const"
+            android:id="@+id/img_knh_accbtn3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="onClick"
             app:srcCompat="@drawable/construction" />
 
         <Button
-            android:id="@+id/btn_knh_etc"
+            android:id="@+id/btn_knh_accbtn4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
