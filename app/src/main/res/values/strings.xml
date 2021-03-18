@@ -12,7 +12,7 @@
     <string name="createAccount">CREATE ACOUNT</string>
     <string name="title_sub">사고 유형을 선택해주세요</string>
     <string name="etc">기타</string>
-    <string name="ask_accident">어떠한 사고인지 알려주세요</string>
+    <string name="ask_accident">사고 정황을 알려주세요</string>
     <string name="content_car">인근에 교통사고가 발생하였습니다.</string>
     <string name="editor_title">직접 입력</string>
     <string name="editor_body">위치 등 상황을 알려주세요.</string>
@@ -21,4 +21,6 @@
     <string name="bt_kdh_main">주변 사람에게 알리기</string>
     <string name="bt_kdh_range">범위 확인하기</string>
     <string name="default_notification_channel_id" />
+    <string name="history">히스토리</string>
+    <string name="sign_out">SIGN OUT</string>
 </resources>

@@ -34,14 +34,6 @@
         android:layout_margin="20dp"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="@string/email" />
-
         <EditText
             android:id="@+id/et_pgh_signUpemail"
             android:layout_width="match_parent"
@@ -49,7 +41,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp"
-            android:backgroundTint="#FF0000"
+            android:backgroundTint="@color/point"
             android:ems="10"
             android:hint="@string/email"
             android:inputType="textEmailAddress" />
@@ -59,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:backgroundTint="#FF0000"
+            android:backgroundTint="@color/point"
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword" />
@@ -75,7 +67,8 @@
             android:onClick="clickBTN"
             android:padding="10dp"
             android:text="@string/login"
-            app:backgroundTint="#DA2C2C" />
+            android:textColor="#FFFFFF"
+            app:backgroundTint="@color/point" />
 
         <TextView
             android:id="@+id/tv_pgh_LoginMoveTXT"

@@ -61,7 +61,7 @@ public class DialogActivity<queryString> extends AppCompatActivity {
 
     }
 
-    private Dialog makeDialog (String title) {
+    private Dialog makeDialog (String title, String type) {
         dialog = new Dialog(DialogActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_layout);
@@ -70,6 +70,7 @@ public class DialogActivity<queryString> extends AppCompatActivity {
 
         RadioButton rbtn_knh_op1 = dialog.findViewById(R.id.rbtn_knh_op1);
         rbtn_knh_op1.setText(title);
+
         RadioButton rbtn_knh_op2 = dialog.findViewById(R.id.rbtn_knh_op2);
         EditText et_knh_custominfo = dialog.findViewById(R.id.et_knh_custominfo);
         et_knh_custominfo.setEnabled(false);
@@ -119,17 +120,17 @@ public class DialogActivity<queryString> extends AppCompatActivity {
                     dialog.dismiss();
 
                     String basic = rbtn_knh_op1.getText().toString();
-                    Log.i(TAG, "Dialog checkedButton : " + basic);
+                    Log.i(TAG, "Dialog checkedButton : " + basic +  " : " + type);
 
-                    sendPostToFCM("AN",basic,"화재 사고","2021.03.18",x+"",y+"");
+                    sendPostToFCM("AN",basic,type,"2021.03.18",x+"",y+"");
 
                 } else if (rbtn_knh_op2.isChecked()) {
                     dialog.dismiss();
 
                     String info = et_knh_custominfo.getText().toString();
-                    Log.i(TAG, "Dialog checkedButton : " + info);
+                    Log.i(TAG, "Dialog checkedButton : " + info +  " : " + type);
 
-                    sendPostToFCM("AN",info,"화재 사고","2021.03.18",x+"",y+"");
+                    sendPostToFCM("AN",info,type,"2021.03.18",x+"",y+"");
 
                 } else
                     Toast.makeText(DialogActivity.this, "값을 입력해주세요", Toast.LENGTH_SHORT).show();
@@ -154,25 +155,29 @@ public class DialogActivity<queryString> extends AppCompatActivity {
 
         switch (v.getId()) {
             case R.id.img_knh_accbtn1:
-                makeDialog("인근에서 교통사고 발생").show();
+                makeDialog("인근에서 교통사고 발생","교통사고").show();
                 break;
 
             case R.id.img_knh_accbtn2:
-                makeDialog("인근에서 화재 발생").show();
+                makeDialog("인근에서 화재 발생","화재사고").show();
                 break;
 
             case  R.id.img_knh_accbtn3:
-                makeDialog("인근에서 공사 중").show();
+                makeDialog("인근에서 공사 중","공사 중").show();
                 break;
 
             case R.id.btn_knh_accbtn4:
-                makeDialog("기타").show();
+                makeDialog("기타","기타").show();
                 break;
         }
     }
 
 
     //-------------------------------------
+
+    public void backClick (View V) {
+        finish();
+    }
 
     // 초기화 메서드
     public void init() {

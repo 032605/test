@@ -14,10 +14,11 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/img_knh_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:onClick="backClick"
             app:srcCompat="@drawable/back_btn" />
 
         <TextView
@@ -73,6 +74,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:background="@drawable/btn_style"
+            android:onClick="onClick"
             android:text="@string/etc"
             android:textColor="@color/point"
             android:textSize="18sp"
