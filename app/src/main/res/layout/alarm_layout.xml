@@ -19,9 +19,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:adjustViewBounds="true"
             android:contentDescription="@string/history"
+            android:maxHeight="25dp"
             android:onClick="backClick"
-            app:srcCompat="@drawable/back_btn" />
+            app:srcCompat="@drawable/back" />
 
         <TextView
             android:id="@+id/textView3"
@@ -47,6 +51,7 @@
         android:orientation="horizontal">
 
         <ListView
+            android:id="@+id/hisview"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </LinearLayout>

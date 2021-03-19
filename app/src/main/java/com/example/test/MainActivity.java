@@ -1,28 +1,26 @@
 package com.example.test;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PointF;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.PermissionChecker;
 import androidx.core.graphics.ColorUtils;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
-import android.Manifest;
-import android.annotation.SuppressLint;
-import android.graphics.Color;
-import android.graphics.PointF;
-import android.location.Location;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationCallback;
@@ -54,9 +52,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private boolean locationEnabled;
     private Button bt_kdh_range;
     private Button bt_kdh_inform;
-    private ImageView img_knh_alarmbtn;
     private static NaverMap map;
-    private static LatLng Last_coord;
+    private static LatLng Last_coord = new LatLng(37.5666102, 126.9783881);
     public static LatLng Click_coord = new LatLng(37.5666102, 126.9783881);
     private CircleOverlay circleOverlay;
 
@@ -89,11 +86,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         bt_kdh_range = findViewById(R.id.bt_kdh_range);
         bt_kdh_inform =findViewById(R.id.bt_kdh_inform);
-
     }
     public static class CustomLocationSource implements LocationSource, NaverMap.OnMapClickListener {
         private OnLocationChangedListener listener;
-        public static boolean MapNullCheck = false;
+        public static boolean isMark = false;
         public static Marker markerWithSubCaption = new Marker();
         @Override
         public void activate(@NonNull OnLocationChangedListener listener) {
@@ -115,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             double distance = MainActivity.Cal_distance(coord);
             if(distance<1) {
-                MapNullCheck = false;
+                isMark = true;
                 markerWithSubCaption.setPosition(coord);
                 markerWithSubCaption.setIcon(MarkerIcons.PINK);
                 markerWithSubCaption.setCaptionTextSize(14);
@@ -123,16 +119,15 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 markerWithSubCaption.setCaptionMinZoom(12);
                 markerWithSubCaption.setSubCaptionTextSize(10);
                 markerWithSubCaption.setSubCaptionColor(Color.GRAY);
-                markerWithSubCaption.setSubCaptionText("사고");
                 markerWithSubCaption.setSubCaptionMinZoom(13);
                 markerWithSubCaption.setMap(MainActivity.map);
             }
             else
             {
-                MapNullCheck = true;
+                isMark = false;
                 markerWithSubCaption.setMap(null);
             }
-            Log.d("test","Click = " + coord.toString() + "/"+ distance);
+            Log.d("MMM","Click = " + coord.toString() + "/"+ distance);
         }
     }
 
@@ -184,15 +179,13 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         bt_kdh_inform.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("MMM","클릭" + CustomLocationSource.MapNullCheck );
-                if(CustomLocationSource.MapNullCheck == true)
+                if(CustomLocationSource.isMark == false)
                 {
-                    Log.d("MMM","null");
+                    Toast.makeText(getApplicationContext(),"사고발생지역을 지정해주세요",Toast.LENGTH_SHORT).show();
                     return;
                 }
                 else
                 {
-                    Log.d("MMM","not null");
                     Intent intent = new Intent(MainActivity.this, DialogActivity.class);
                     startActivity(intent);
                 }

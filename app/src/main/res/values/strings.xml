@@ -5,10 +5,10 @@
     <string name="day">31</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
-    <string name="login">LOGIN</string>
+    <string name="login">SIGN IN</string>
     <string name="signup">No account yet? Create one</string>
     <string name="name">Name</string>
-    <string name="Already">Already a member? Login</string>
+    <string name="Already">Already a member? Sign In</string>
     <string name="createAccount">CREATE ACOUNT</string>
     <string name="title_sub">사고 유형을 선택해주세요</string>
     <string name="etc">기타</string>

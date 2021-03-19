@@ -1,7 +1,6 @@
 package com.example.test;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.ActionBar;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -12,42 +11,25 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONObject;
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class DialogActivity<queryString> extends AppCompatActivity {
 
-    private final boolean       D = true;
-    private final String        TAG = "DialogActivity";
+    private final boolean D = true;
+    private final String TAG = "DialogActivity";
 
-    public Dialog  dialog;
-
-    private RadioButton     rbtn_knh_op1, rbtn_knh_op2;
-    private  Button btn_knh_Confirm;
-    private ImageView   img_knh_accbtn1, img_knh_accbtn2, img_knh_accbtn3, img_knh_accbtn4;
-
-
-
-    //private String TAG = "tempAcitivity";
-    private ArrayList<UserDTO> userList;
-    private ArrayList<String> userKeyList;
-    //Notification 을 위한 서버 키 값
-    private static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
-    private static final String SERVER_KEY = "AAAAv0So2UA:APA91bGUIx8g9J15CH-vOymVe8JSNVkDaOsdeww2cRD6oZHG0TvlnB2cax6MKutyL6TAMdZZgjZvxeZ_2fadYaLn8t8565AzH2Gp9JRVuSseIHDP1YwSLHdgyZOPqSFitKChOlosboXZ";
-
+    public Dialog dialog, etcDialog;
+    public static ArrayList<AlertDTO> alertDTOS = new ArrayList<AlertDTO>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +37,25 @@ public class DialogActivity<queryString> extends AppCompatActivity {
         setContentView(R.layout.sub_layout);
 
 
-        //temp method init
-        init();
-        getAllUser();
 
     }
 
-    private Dialog makeDialog (String title, String type) {
+    private void insert_DB(String comment) {
+        Date date = new Date(System.currentTimeMillis());
+        SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        String cur_time = sdfNow.format(date);
+
+        FirebaseDatabase.getInstance().getReference("Alert").push().setValue(
+                new AlertDTO(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                        MainActivity.Click_coord.latitude,
+                        MainActivity.Click_coord.longitude,
+                        cur_time,
+                        comment
+                )
+        );
+    }
+
+    private Dialog makeDialog(String title, String type) {
         dialog = new Dialog(DialogActivity.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_layout);
@@ -72,11 +66,12 @@ public class DialogActivity<queryString> extends AppCompatActivity {
         rbtn_knh_op1.setText(title);
 
         RadioButton rbtn_knh_op2 = dialog.findViewById(R.id.rbtn_knh_op2);
-        EditText et_knh_custominfo = dialog.findViewById(R.id.et_knh_custominfo);
+        EditText et_knh_custominfo = dialog.findViewById(R.id.et_knh_etcinfo);
         et_knh_custominfo.setEnabled(false);
 
         Button btn_knh_Confirm = dialog.findViewById(R.id.btn_knh_Confirm);
         Button btn_knh_Cancle = dialog.findViewById(R.id.btn_knh_Cancle);
+
 
         // radio button 속성 --------------------------------------------------------------
 
@@ -113,34 +108,39 @@ public class DialogActivity<queryString> extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                double x =  MainActivity.Click_coord.latitude;
+                double x = MainActivity.Click_coord.latitude;
                 double y = MainActivity.Click_coord.longitude;
 
-                if (rbtn_knh_op1.isChecked()) {
-                    dialog.dismiss();
 
-                    String basic = rbtn_knh_op1.getText().toString();
-                    Log.i(TAG, "Dialog checkedButton : " + basic +  " : " + type);
+                    if (rbtn_knh_op1.isChecked()) {
+                        insert_DB(type);
+                        String basic = rbtn_knh_op1.getText().toString();
+                        Log.i(TAG, "Dialog checkedButton : " + basic + " : " + type);
+                        dialog.dismiss();
+                        finish();
 
-                    sendPostToFCM("AN",basic,type,"2021.03.18",x+"",y+"");
+                    } else if (rbtn_knh_op2.isChecked()) {
+                        if (et_knh_custominfo.length() > 0 ) {
+                            insert_DB(et_knh_custominfo.getText().toString());
+                            String info = et_knh_custominfo.getText().toString();
+                            Log.i(TAG, "Dialog checkedButton : " + info + " : " + type);
+                            dialog.dismiss();
+                            finish();
+                        }
+                            else {
+                            Toast.makeText(DialogActivity.this, "값을 입력해주세요", Toast.LENGTH_SHORT).show();
+                        }
 
-                } else if (rbtn_knh_op2.isChecked()) {
-                    dialog.dismiss();
+                    } else
+                        Toast.makeText(DialogActivity.this, "값을 입력해주세요", Toast.LENGTH_SHORT).show();
 
-                    String info = et_knh_custominfo.getText().toString();
-                    Log.i(TAG, "Dialog checkedButton : " + info +  " : " + type);
-
-                    sendPostToFCM("AN",info,type,"2021.03.18",x+"",y+"");
-
-                } else
-                    Toast.makeText(DialogActivity.this, "값을 입력해주세요", Toast.LENGTH_SHORT).show();
             }
         });
 
         btn_knh_Cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(DialogActivity.this,"취소하였습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DialogActivity.this, "취소하였습니다.", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
         });
@@ -148,129 +148,77 @@ public class DialogActivity<queryString> extends AppCompatActivity {
         return dialog;
     }
 
+    private Dialog makeDiaglog_etc() {
+        etcDialog = new Dialog(DialogActivity.this);
+        etcDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        etcDialog.setContentView(R.layout.etc_layout);
 
-    public void onClick (View v) {
+        etcDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        EditText et_knh_etcinfo = etcDialog.findViewById(R.id.et_knh_etcinfo);
+
+        Button btn_knh_Confirm = etcDialog.findViewById(R.id.btn_knh_Confirm);
+        Button btn_knh_Cancle = etcDialog.findViewById(R.id.btn_knh_Cancle);
+
+
+        btn_knh_Confirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                double x = MainActivity.Click_coord.latitude;
+                double y = MainActivity.Click_coord.longitude;
+
+                    if (et_knh_etcinfo.length() > 0 ) {
+
+                        insert_DB(et_knh_etcinfo.getText().toString());
+                        String info = et_knh_etcinfo.getText().toString();
+                        Log.i(TAG, "Dialog checkedButton : " + info + " : ");
+                        etcDialog.dismiss();
+                        finish();
+                    }
+                    else {
+                        Toast.makeText(DialogActivity.this, "값을 입력해주세요", Toast.LENGTH_SHORT).show();
+                    }
+            }
+        });
+
+        btn_knh_Cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(DialogActivity.this, "취소하였습니다.", Toast.LENGTH_SHORT).show();
+                etcDialog.dismiss();
+            }
+        });
+
+        return etcDialog;
+    }
+
+    public void onClick(View v) {
         Log.i(TAG, "onClick()");
-
 
         switch (v.getId()) {
             case R.id.img_knh_accbtn1:
-                makeDialog("인근에서 교통사고 발생","교통사고").show();
+                makeDialog("인근에서 교통사고 발생", "교통사고").show();
                 break;
 
             case R.id.img_knh_accbtn2:
-                makeDialog("인근에서 화재 발생","화재사고").show();
+                makeDialog("인근에서 화재 발생", "화재사고").show();
                 break;
 
-            case  R.id.img_knh_accbtn3:
-                makeDialog("인근에서 공사 중","공사 중").show();
+            case R.id.img_knh_accbtn3:
+                makeDialog("인근에서 공사 중", "공사 중").show();
                 break;
 
             case R.id.btn_knh_accbtn4:
-                makeDialog("기타","기타").show();
+                makeDiaglog_etc().show();
                 break;
         }
     }
 
-
     //-------------------------------------
 
-    public void backClick (View V) {
+    public void backClick(View V) {
         finish();
     }
 
-    // 초기화 메서드
-    public void init() {
-        Toast.makeText(getApplicationContext()," 위도 "+MainActivity.Click_coord.latitude+ " 경도 " + MainActivity.Click_coord.longitude,Toast.LENGTH_SHORT).show();
-        userList = new ArrayList<UserDTO>();
-        userKeyList = new ArrayList<String>();
-    }
-
-
-    //모든 유저 정보를 가져오는 메서드
-    public void getAllUser()
-    {
-        FirebaseDatabase.getInstance().getReference().child("User").addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                userKeyList.add(dataSnapshot.getKey());
-                UserDTO userDTO =dataSnapshot.getValue(UserDTO.class);
-                Log.i(TAG,userDTO.getFcnToken()+"");
-                userList.add(userDTO);
-
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //사용자 아이디의 기기가 변경될 시 그에 대한 list 변환 반영을 위한 메서드
-                //변한 유저 정보를 가져옴
-                UserDTO userDTO = dataSnapshot.getValue(UserDTO.class);
-                //유저 키를 가져옴
-                String key = dataSnapshot.getKey();
-                // 그 키와 맞는 유저 리스트의 인덱스 가져옴
-                int userIndex = userKeyList.indexOf(key);
-                UserDTO user =userList.get(userIndex);
-                //유저 정보 수정
-                userList.set(userIndex,userDTO);
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-    // Client단에서 FCM 보내는 메서드
-    private void sendPostToFCM(String title, String body, String type, String time,String locationX,String locationY)
-    {
-
-        for (UserDTO user : userList) {
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // FMC 메시지 생성 start
-                        JSONObject root = new JSONObject();
-                        JSONObject notification = new JSONObject();
-                        JSONObject data = new JSONObject();
-                        notification.put("body", body);
-                        notification.put("title", title);
-                        data.put("type",type);
-                        data.put("time",time);
-                        data.put("locationX",locationX);
-                        data.put("locationY",locationY);
-                        root.put("data",data);
-                        root.put("notification", notification);
-                        root.put("to", user.getFcnToken());
-                        // FMC 메시지 생성 end
-                        URL Url = new URL(FCM_MESSAGE_URL);
-                        HttpURLConnection conn = (HttpURLConnection) Url.openConnection();
-                        conn.setRequestMethod("POST");
-                        conn.setDoOutput(true);
-                        conn.setDoInput(true);
-                        conn.addRequestProperty("Authorization", "key=" + SERVER_KEY);
-                        conn.setRequestProperty("Accept", "application/json");
-                        conn.setRequestProperty("Content-type", "application/json");
-                        OutputStream os = conn.getOutputStream();
-                        os.write(root.toString().getBytes("utf-8"));
-                        os.flush();
-                        conn.getResponseCode();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-    }
 }

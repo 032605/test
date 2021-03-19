@@ -13,25 +13,25 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Test">
-        <activity android:name=".Alarm_Activity"></activity>
+
+        <meta-data
+            android:name="com.google.android.actions"
+            android:resource="@xml/splash_layout" />
+
+        <activity android:name=".Alarm_Activity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".Sign_Up_Activity" />
         <activity android:name=".DialogActivity" />
-        <activity android:name=".Sign_in_Activity">
+        <activity android:name=".Sign_in_Activity" />
+        <activity
+            android:name=".Splash"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <service
-            android:name=".FirebaseMessaingService"
-            android:stopWithTask="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
